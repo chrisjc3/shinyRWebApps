@@ -4,6 +4,9 @@ library(shiny)
 
 shinyServer(function(input, output) {
   
+  output$cheats <- renderTable({
+    GenAnswer()
+  })
     observeEvent(input$Submit, {
     if(input$Submit == 1){turn <<- 0}
   
@@ -18,7 +21,9 @@ shinyServer(function(input, output) {
     turn <<- turnCtr(turn)
     
     if(turn <= TurnMax){
-      output$results <- renderText({turn})
+      output$results <- renderTable({
+        MakeGuess(input$Col1,input$Col2,input$Col3,input$Col4)
+      })
       
       
     } else {
