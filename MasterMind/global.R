@@ -44,6 +44,13 @@ MakeGuess<-function(col1,col2,col3,col4){
   return(ges[2:5,])
 }
 
+turnCtr<-function(x){
+  if(is.na(x)){
+    return(0)
+  } else {
+    return(x+1)
+  }
+}
 
 
 #GAME VARIABLES
