@@ -44,6 +44,29 @@ MakeGuess<-function(col1,col2,col3,col4){
   return(ges[2:5,])
 }
 
+
+
+evaluateGuess<-function(guess, answer){
+  feedback<-cbind(guess, "NA")
+  i<-1
+  while(i<=4){
+    if(guess[i,1] == answer[i,1]){
+      feedback[i,3] <- "CORRECT"
+    } else {
+      j<-1
+      while(j<=4){
+        if(guess[i,1] == answer[j,1]){
+          feedback[i,3] <- "PRESENT"
+        } 
+        j<-j+1
+      }
+      
+    }
+    i<-i+1
+  }
+  return(feedback)
+}
+
 turnCtr<-function(x){
   if(is.na(x)){
     return(0)
