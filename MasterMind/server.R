@@ -1,5 +1,4 @@
 
-
 library(shiny)
 
 shinyServer(function(input, output) {
@@ -17,13 +16,14 @@ shinyServer(function(input, output) {
           #guess<-cbind(guess, game_answer)
           feedback<-evaluateGuess(guess, game_answer)
       } else {
-        return("YOU LOSE")
+        lose_state<-c("YOU LOSE!")
+        return(lose_state)
       }
     })
     
-    output$results <- renderTable({
+    output$results <- renderText({
       feedback()
     })
     
-  
+    
 })
