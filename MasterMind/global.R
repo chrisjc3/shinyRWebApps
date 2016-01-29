@@ -90,7 +90,7 @@ evaluateGuess<-function(guess, answer){
   }
   win_state<-count.rows(feedback[,3:4])
   if(win_state[1,1]==4 & win_state[1,2]=="CORRECT"){
-    return("PLAYER WINS!")
+    return("PLAYER WINS! (YOU SHOULD PRESS 'REFRESH GAME')")
   }else {
     return(sort(feedback[,3]))
   }

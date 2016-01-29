@@ -1,7 +1,9 @@
-
 library(shiny)
+library(shinyjs)
+library(V8)
 
 shinyUI(fluidPage(
+  useShinyjs(),
   tagList(
     tags$head(
       tags$link(rel="stylesheet", type="text/css",href="style.css")
@@ -16,13 +18,12 @@ shinyUI(fluidPage(
                            selectInput("Col4", "Color #4", colarr)
                            ),
                   actionButton("Submit", "Submit Guess", class = "sButton"),
-                  actionButton("Refresh", "Refresh Game", class = "sButton")
+                  actionButton("refresh", "Refresh Game", class = "sButton")
                ),
   mainPanel(h1("Feedback:"),
-            h6("CHEATS:"),
-            tableOutput("cheats"),
-            br(),
-            h6("REAL FEEDBACK:"),
-            tableOutput("results")
+#             tableOutput("cheats"),
+#              br(),
+            tableOutput("results"),
+            textOutput("turnno")
             )
 ))
