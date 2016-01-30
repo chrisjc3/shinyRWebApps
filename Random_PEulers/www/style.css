@@ -7,9 +7,9 @@
   top:0;
 }
 .rslts{
-  float:right;
-  position:relative;
-  top:0;
+  left:30em;
+  position:absolute;
+  top:0.5em;
 }
 .ExLink{
   float:left;
@@ -20,4 +20,5 @@
   float:left;
   clear:left;
   position:relative;
+  padding-bottom:2em;
 }

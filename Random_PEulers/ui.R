@@ -30,7 +30,8 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                             min = 1, max = 1000, value = 1, step =
                               1, round = 0
                           ),
-                          actionButton(class = "sButton", "submit1", "Submit")
+                          actionButton(class = "sButton", "submit1", "Submit"),
+                          actionButton(class = "sButton", "resB", "Reset")
                         ))
                       )),
                       a(class="ExLink", id = "Ex2Proc", "Project Euler 2", href = "#"),
@@ -44,15 +45,17 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                             min = 1, max = 4000000, value = 1, step =
                               1, round = 0
                           ),
-                          actionButton(class = "sButton", "submit2", "Submit")
+                          actionButton(class = "sButton", "submit2", "Submit"),
+                          actionButton(class = "sButton", "resB", "Reset")
                         ))
                       ))
                       
                       #ONE ROW PER PROBLEM SEEMS TO LOOK OK#
                     ),
                     
-                    tags$div(class = "rslts", column(12,
-                                              tableOutput("results")))
+                    tags$div(class = "rslts", id = "rslts", column(12,
+                                              h3("Results:"),
+                                              textOutput("results")))
                     
                     ####TAG END
                   )
