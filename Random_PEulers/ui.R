@@ -39,18 +39,21 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                         class = "ExBox", id = "EX2",
                         fluidRow(column(
                           4,
-                          h3("By considering the terms in the Fibonacci sequence whose values do not x, find the sum of the even-valued terms."),
+                          h3("By considering the terms in the Fibonacci sequence whose values do not exceed x, find the sum of the even-valued terms."),
                           sliderInput(
                             "Ex2N", "x = ",
-                            min = 1, max = 4000000, value = 1, step =
-                              1, round = 0
+                            min = 1000, max = 40000000, value = 1000, step =
+                              1000, round = 0
                           ),
                           actionButton(class = "sButton", "submit2", "Submit")
                         ))
                       ))
                       
-                      #ONE ROW PER PROBLEM SEEMS TO LOOK OK#
+                      #END PICKER TAG
                     ),
+                    
+                    
+                    ####RESULTS
                     
                     tags$div(class = "rslts", id = "rslts", column(12,
                                               h3("Results:"),
