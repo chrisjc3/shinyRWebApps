@@ -1,6 +1,5 @@
-
+#################PROBLEM 1####################
 ProjEul1 <- function(x) {
-  #threes = multiples of 3 under input$Ex1N
   threes<-cbind(1,3)
   colnames(threes)<-c("it", "no")
   j<-3
@@ -11,7 +10,6 @@ ProjEul1 <- function(x) {
     i<-i+1
   }
   threes[2:length(threes[,1]), ]
-  #fives = multiples of 5 under input$Ex1N
   fives<-cbind(1,5)
   colnames(fives)<-c("it", "no")
   j<-5
@@ -27,7 +25,7 @@ ProjEul1 <- function(x) {
   hld<-unique(hld[,2])
   return(sum(hld))
 }
-
+#################PROBLEM 2####################
 ProjEul2<- function(x) {
   f<-cbind(1,1)
   s<-cbind(2,2)
@@ -54,3 +52,28 @@ ProjEul2<- function(x) {
   }
   return(sum(as.numeric(fibeven[2:length(fibeven[,2]),2])))
 }
+#################PROBLEM 3####################
+#http://stackoverflow.com/questions/3476782/how-to-check-if-the-number-is-integer
+check.integer <- function(N){
+  !grepl("[^[:digit:]]", format(N,  digits = 20, scientific = FALSE))
+}
+ProjEul3 <- function(x) {
+  primes <- cbind("NA","NA")
+  colnames(primes) <- c("it", "no")
+  i<-1
+  potprime <- 2
+  while (potprime <= x) {
+    primetest <- x / potprime
+    if (check.integer(primetest)) {
+      x <- primetest
+      hld <- c(i, potprime)
+      primes <- rbind(primes,hld)
+      i <- i + 1
+    } else {
+      potprime<-potprime+1
+    }
+  }
+  return(primes[length(primes[,2]),2])
+}
+
+
