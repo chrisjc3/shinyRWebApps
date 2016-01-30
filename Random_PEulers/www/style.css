@@ -9,7 +9,7 @@
 .rslts{
   left:30em;
   position:absolute;
-  top:0.5em;
+  top:5em;
 }
 .ExLink{
   float:left;
@@ -21,4 +21,9 @@
   clear:left;
   position:relative;
   padding-bottom:2em;
+}
+.rButton{
+  left:30em;
+  position:absolute;
+  top:2em;
 }

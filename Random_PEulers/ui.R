@@ -19,34 +19,33 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                     tags$div(
                       class = "picker",
                       titlePanel("Project Euler Exercises"),
+                      actionButton(class = "rButton", "resB", "Reset"),
                       a(class="ExLink", id = "Ex1Proc", "Project Euler 1", href = "#"),
                       hidden(tags$div(
                         class = "ExBox", id = "EX1",
                         fluidRow(column(
-                          6,
+                          4,
                           h3("Find the sum of all the multiples of 3 or 5 below x."),
                           sliderInput(
                             "Ex1N", "x = ",
                             min = 100, max = 10000, value = 100, step =
                               100, round = 0
                           ),
-                          actionButton(class = "sButton", "submit1", "Submit"),
-                          actionButton(class = "rButton", "resB", "Reset")
+                          actionButton(class = "sButton", "submit1", "Submit")
                         ))
                       )),
                       a(class="ExLink", id = "Ex2Proc", "Project Euler 2", href = "#"),
                       hidden(tags$div(
                         class = "ExBox", id = "EX2",
                         fluidRow(column(
-                          6,
+                          4,
                           h3("By considering the terms in the Fibonacci sequence whose values do not x, find the sum of the even-valued terms."),
                           sliderInput(
                             "Ex2N", "x = ",
                             min = 1, max = 4000000, value = 1, step =
                               1, round = 0
                           ),
-                          actionButton(class = "sButton", "submit2", "Submit"),
-                          actionButton(class = "rButton", "resB", "Reset")
+                          actionButton(class = "sButton", "submit2", "Submit")
                         ))
                       ))
                       
