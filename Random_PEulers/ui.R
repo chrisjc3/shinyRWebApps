@@ -31,7 +31,7 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                               100, round = 0
                           ),
                           actionButton(class = "sButton", "submit1", "Submit"),
-                          actionButton(class = "sButton", "resB", "Reset")
+                          actionButton(class = "rButton", "resB", "Reset")
                         ))
                       )),
                       a(class="ExLink", id = "Ex2Proc", "Project Euler 2", href = "#"),
@@ -46,7 +46,7 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                               1, round = 0
                           ),
                           actionButton(class = "sButton", "submit2", "Submit"),
-                          actionButton(class = "sButton", "resB", "Reset")
+                          actionButton(class = "rButton", "resB", "Reset")
                         ))
                       ))
                       
