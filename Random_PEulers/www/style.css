@@ -6,8 +6,18 @@
   position:relative;
   top:0;
 }
-.Exer{
+.rslts{
   float:right;
   position:relative;
   top:0;
+}
+.ExLink{
+  float:left;
+  clear:left;
+  position:relative;
+}
+.ExBox{
+  float:left;
+  clear:left;
+  position:relative;
 }
