@@ -1,0 +1,13 @@
+.reset{
+  display: inline-block;
+}
+.picker{
+  float:left;
+  position:relative;
+  top:0;
+}
+.Exer{
+  float:right;
+  position:relative;
+  top:0;
+}
