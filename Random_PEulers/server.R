@@ -12,9 +12,10 @@ shinyServer(function(input, output, session) {
     session$reload();
   })
   
-  observeEvent(input$submit1, {
-    output$results <- renderText({ProjEul1(input$Ex1N)})
+  outnow<-eventReactive(input$submit1, {
+    return(ProjEul1(input$Ex1N))
   })
   
+  output$results <- renderText({outnow()})
  
 })
