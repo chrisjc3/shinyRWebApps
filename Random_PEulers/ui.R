@@ -27,8 +27,8 @@ shinyUI(fluidPage(###########TAGS/LINKS#########
                           h3("Find the sum of all the multiples of 3 or 5 below x."),
                           sliderInput(
                             "Ex1N", "x = ",
-                            min = 1, max = 1000, value = 1, step =
-                              1, round = 0
+                            min = 100, max = 10000, value = 100, step =
+                              100, round = 0
                           ),
                           actionButton(class = "sButton", "submit1", "Submit"),
                           actionButton(class = "sButton", "resB", "Reset")
