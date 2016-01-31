@@ -71,7 +71,7 @@ shinyUI(fluidPage(
           h3("What is the largest prime factor of the number x?"),
           sliderInput(
             "Ex3N", "x = ",
-            min = 10000, max = 1000000000000, value = 1000000, step =
+            min = 10000, max = 600851475143 , value = 1000000, step =
               1000000, round = 0
           ),
           actionButton(class = "sButton", "submit3", "Submit")
@@ -85,10 +85,10 @@ shinyUI(fluidPage(
       class = "ExBox", id = "EX4",
       fluidRow(column(
         4,
-        h3("Find the largest palindrome made from the product of two x-digit numbers."),
+        h3("Find the largest palindrome made from the product of two x-digit numbers. (Not broken, just slow)"),
         sliderInput(
           "Ex4N", "x = ",
-          min = 1, max = 3, value = 1, step =
+          min = 2, max = 6, value = 2, step =
             1, round = 0
         ),
         actionButton(class = "sButton", "submit4", "Submit")

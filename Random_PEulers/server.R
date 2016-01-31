@@ -1,31 +1,7 @@
 
+
 library(shiny)
 library(shinyjs)
-
-ProjEul4 <- function(x) {
-  
-  
-  
-# primes <- cbind("NA","NA")
-# colnames(primes) <- c("it", "no")
-# i<-1
-# potprime <- 2
-# while (potprime <= x) {
-#   primetest <- x / potprime
-#   if (check.integer(primetest)) {
-#     x <- primetest
-#     hld <- c(i, potprime)
-#     primes <- rbind(primes,hld)
-#     i <- i + 1
-#   } else {
-#     potprime<-potprime+1
-#   }
-# }
-  
-  
-  
-  return(x)
-}
 
 
 shinyServer(function(input, output, session) {
@@ -56,7 +32,6 @@ shinyServer(function(input, output, session) {
   observeEvent(input$submit4, {
     outnow$out<-ProjEul4(input$Ex4N)
   })
-  
   #RENDER RESULTS
   output$results <- renderText({outnow$out})
  

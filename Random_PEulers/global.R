@@ -75,5 +75,54 @@ ProjEul3 <- function(x) {
   }
   return(primes[length(primes[,2]),2])
 }
+##############PROBLEM 4########################
 
+check.palindrome <- function(x,test) {
+  palH1 <- as.character(test)
+  palH1 <- substr(palH1,1,x)
+  palH2 <- as.character(test)
+  palH2 <- substr(palH2,x + 1,nchar(palH2))
+  palH2 <- strsplit(palH2, NULL)[[1]]
+  palH2 <- paste(rev(palH2),collapse = '')
+  if (palH1 == palH2) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
 
+make.9s <- function(x) {
+  stTest <- c("NA")
+  i <- 1
+  while (i <= x) {
+    stTest <- cbind(stTest,9)
+    i = i + 1
+  }
+  stTest <- stTest[2:length(stTest)]
+  return(paste(stTest,collapse = ''))
+}
+
+ProjEul4 <- function(x) {
+  pdromes<-c("NA")
+  t1 <- as.numeric(make.9s(x))
+  t2 <- as.numeric(make.9s(x))
+  slightlylessdig<-as.numeric(make.9s(x-1))
+  while (t1 > slightlylessdig & t2 > slightlylessdig) {
+    palindromeTest <- t1 * t2
+    if (check.palindrome(x,palindromeTest) == TRUE) {
+      pdromes<-cbind(pdromes, palindromeTest)
+    }
+    t1 <- t1 - 1
+    t2 <- as.numeric(make.9s(x))
+    while (t2 >= t1) {
+      palindromeTest <- t1 * t2
+      if (check.palindrome(x,palindromeTest) == TRUE) {
+        pdromes<-cbind(pdromes, palindromeTest)
+      }
+      t2 <- t2 - 1
+    }
+  }
+  return(max(pdromes[2:length(pdromes)]))
+}
+#################PROBLEM 5#################
+###THEY STARTED TO RUN INTENSELY SLOW AT PROBLEM 5####
