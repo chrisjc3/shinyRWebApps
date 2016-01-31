@@ -8,10 +8,12 @@ library(DT)
 
 shinyUI(navbarPage(
   "CDM Suite",
+                    ######START EXCEL PANEL########
   tabPanel(
     "Excel",
     tabsetPanel(
       "",
+                      ######START EXCEL RANOMIZER########
       tabPanel(
         "Randomizer",
         sidebarPanel(
@@ -46,6 +48,7 @@ shinyUI(navbarPage(
         )
       ),
       tabPanel(
+                    ######START EXCEL SERIALIZER########
         "Test Serializer",
         sidebarPanel(
           "",
@@ -75,12 +78,15 @@ shinyUI(navbarPage(
         )
       )
     ),
+  
+                ######START CSV PANEL########
     tabPanel("CSV",
              tabsetPanel(
                "",
                tabPanel("Randomizer"),
                tabPanel("SAS Code Generator")
              )),
+                ######START SAS PANEL########
     tabPanel("SAS7BDAT",
              tabsetPanel(
                "",

@@ -12,7 +12,8 @@ shinyServer(function(input, output, session) {
   out2 <- reactiveValues()
   out3 <- reactiveValues()
   
-  #OBSERVATION: EXCEL :: RANDOMIZER
+  #OBSERVATION: 
+              #EXCEL :: RANDOMIZER
   observeEvent(input$submitXL1,{
     origdata <- reactive({
       read.xlsx(input$XLrandomizerFile[,c("datapath")], 1)
@@ -44,7 +45,8 @@ shinyServer(function(input, output, session) {
       }
     )
   })
-  #OBSERVATION: EXCEL :: TEST_SERIALIZER
+  #OBSERVATION: 
+              #EXCEL :: TEST_SERIALIZER  INPUT
   observeEvent(input$inputXL2,{
     origdata <- reactive({
       read.xlsx(input$XLserializeFile[,c("datapath")], 1)
@@ -60,7 +62,10 @@ shinyServer(function(input, output, session) {
     list(columns=input$XLserializedIn_columns_selected)
   })
   
+              #EXCEL :: TEST_SERIZLER SUBMIT
   observeEvent(input$submitXL2,{
+    
+    
     
   })
   
