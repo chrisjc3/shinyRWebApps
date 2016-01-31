@@ -63,10 +63,16 @@ shinyServer(function(input, output, session) {
   })
   
               #EXCEL :: TEST_SERIZLER SUBMIT
+  defSerialCol<-function(xcol, fl){
+    
+    
+    return(fl)
+  }
+  
+  
   observeEvent(input$submitXL2,{
-    
-    
-    
+    out2$out<-defSerialCol(input$XLserializedIn_columns_selected, out1$out)
+    output$XLserializedOut<-DT::renderDataTable(out2$out)
   })
   
   #OBSERVATIONS END

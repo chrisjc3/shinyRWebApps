@@ -74,7 +74,7 @@ shinyUI(navbarPage(
             DT::dataTableOutput("XLserializedIn"),
             br(),
             h3("Results Preview"),
-            textOutput("XLserializedOut")
+            DT::dataTableOutput("XLserializedOut")
           )
         )
       )
