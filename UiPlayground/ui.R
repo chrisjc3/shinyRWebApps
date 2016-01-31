@@ -65,6 +65,7 @@ shinyUI(navbarPage(
               h5("3) Select Column to serialize"),
               h5("4) Press 'Submit'")
             ),
+            h3("Selected column #:"),
             verbatimTextOutput('info')
           ),
           mainPanel(

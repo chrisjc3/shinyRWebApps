@@ -58,8 +58,8 @@ shinyServer(function(input, output, session) {
   })
   
   proxy = dataTableProxy('XLserializedIn')
-  output$info = renderPrint({
-    list(columns=input$XLserializedIn_columns_selected)
+  output$info = renderText({
+    input$XLserializedIn_columns_selected
   })
   
               #EXCEL :: TEST_SERIZLER SUBMIT
