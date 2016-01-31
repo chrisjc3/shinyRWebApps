@@ -4,6 +4,7 @@ library(shiny)
 library(XLConnect)
 library(sas7bdat)
 library(shiny)
+library(DT)
 
 shinyServer(function(input, output, session) {
   #AVAILABLE OUTPUT REACTIVES
@@ -31,8 +32,8 @@ shinyServer(function(input, output, session) {
     output$XLrandomizerKeys <- renderTable({
       out2$out
     })
-    output$XLrandomizerOut <- renderTable({
-      out3$out[1:5,]
+    output$XLrandomizerOut <- DT::renderDataTable({
+      DT::datatable(out3$out)
     })
     output$XLrandomizerDL <- downloadHandler(
       filename = function() {
@@ -49,10 +50,16 @@ shinyServer(function(input, output, session) {
       read.xlsx(input$XLserializeFile[,c("datapath")], 1)
     })
     out1$out<-origdata()
-    output$XLserializedIn <- renderTable({
-      out1$out[1:5,]
-    })
+    output$XLserializedIn <- DT::renderDataTable(
+      out1$out, selection = list(mode = 'single', target = 'column')
+    )
   })
+  
+  proxy = dataTableProxy('XLserializedIn')
+  output$info = renderPrint({
+    list(columns=input$XLserializedIn_columns_selected)
+  })
+  
   observeEvent(input$submitXL2,{
     
   })
