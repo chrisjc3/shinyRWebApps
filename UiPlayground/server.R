@@ -5,6 +5,7 @@ library(XLConnect)
 library(sas7bdat)
 library(shiny)
 library(DT)
+library(plyr)
 
 shinyServer(function(input, output, session) {
   #AVAILABLE OUTPUT REACTIVES
@@ -45,6 +46,8 @@ shinyServer(function(input, output, session) {
       }
     )
   })
+  
+  
   #OBSERVATION: 
               #EXCEL :: TEST_SERIALIZER  INPUT
   observeEvent(input$inputXL2,{
@@ -62,38 +65,32 @@ shinyServer(function(input, output, session) {
     input$XLserializedIn_columns_selected
   })
   
-              #EXCEL :: TEST_SERIZLER SUBMIT
-  defSerialCol<-function(xcol, fl){
-    #TAKE fl[,xcol] as unique list
-    fHld<-unique(fl[,xcol])
-    fHldLen<-length(fHld)
-    i<-1
-    hld<-cbind("NA","NA")
-    #CBIND an integer to count through uniques
-    while(i<=fHldLen){
-      hrow<-cbind(i, fHld[i])
-      hld<-rbind(hld, hrow)
-      i<-i+1
-    }
-    hld<-hld[1:fHldLen+1,]
-    #how to insert to right of fl[,xcol]
-    
-    
-    
-    return(hld)
+  
+  sorInput<-function(xcol, fl){
+    fl<-as.data.frame(fl)
+    fl<-fl[order(fl[,xcol]),]
+    return(fl)
   }
   
-  #DEBUG OUTPUT
-  observeEvent(input$submitXL2,{
-    out2$out<-defSerialCol(input$XLserializedIn_columns_selected, as.matrix(out1$out))
-    output$XLserializedOut<-renderTable({as.matrix(out2$out)})
+              #EXCEL :: TEST_SERIZLER SUBMIT
+  observeEvent(input$serializeXL2,{
+    out2$out<-addSerial.atCol(input$XLserializedIn_columns_selected, out1$out)
+    output$XLserializedOut<-DT::renderDataTable(out2$out)
+  })
+  #this would need to be based off post serialization column number
+    #if it worked...
+  observeEvent(input$SortserializeXL2,{
+    out3$out<-sorInput(input$XLserializedIn_columns_select,out2$out)
+    output$XLserializedOut<-DT::renderDataTable(out3$out)
   })
   
-  #DT OUTPUT
-#   observeEvent(input$submitXL2,{
-#     out2$out<-defSerialCol(input$XLserializedIn_columns_selected, out1$out)
-#     output$XLserializedOut<-DT::renderDataTable(out2$out)
-#   })
-#   
+  output$XLserializedDL <- downloadHandler(
+    filename = function() {
+      paste(input$XLserializeFile, '.csv', sep = '')
+    },
+    content = function(file) {
+      write.csv(as.matrix(out3$out), file)
+    }
+  )
   #OBSERVATIONS END
 })

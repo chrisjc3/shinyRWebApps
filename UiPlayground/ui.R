@@ -5,6 +5,7 @@ library(XLConnect)
 library(sas7bdat)
 library(shiny)
 library(DT)
+library(plyr)
 
 shinyUI(navbarPage(
   "CDM Suite",
@@ -56,7 +57,9 @@ shinyUI(navbarPage(
           actionButton(class =
                          "iButton","inputXL2","Fetch"),
             actionButton(class =
-                           "sButton","submitXL2","Submit"),
+                           "sButton","serializeXL2","Serialize"),
+          actionButton(class =
+                         "sButton","SortserializeXL2","Sort Output"),
             downloadLink('XLserializedDL', 'Download'),
             div(
               h3("Explanation:"),
@@ -74,10 +77,7 @@ shinyUI(navbarPage(
             DT::dataTableOutput("XLserializedIn"),
             br(),
             h3("Results Preview"),
-            #DT OUTPUT
-            # DT::dataTableOutput("XLserializedOut")
-            #DEBUG OUTPUT
-            tableOutput("XLserializedOut")
+            DT::dataTableOutput("XLserializedOut")
           )
         )
       )

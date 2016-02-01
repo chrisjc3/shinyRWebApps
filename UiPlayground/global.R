@@ -55,3 +55,33 @@ CCipher<-function(x, ent, c_key, n_key){
   }
   ent
 }
+
+addSerial.atCol<-function(xcol, fl){
+  fl<-as.data.frame(fl)
+  fl<-fl[order(fl[,xcol]),]
+  fHld<-fl[,xcol]
+  fHldLen<-length(fHld)
+  i<-1
+  j<-0
+  hld<-cbind("NA","NA")
+  tgt<-"NA"
+  while(i<=fHldLen){
+    if(tgt!=fHld[i]){
+      tgt<-fHld[i]
+      j<-j+1
+    } 
+    hrow<-cbind(j, tgt)
+    hld<-rbind(hld, hrow)
+    i<-i+1
+  }
+  LeftSerial<-hld[2:length(hld[,1])]
+  out<-cbind(fl[,1:xcol], LeftSerial, fl[,(xcol+1):length(colnames(fl))])
+  return(out)
+}
+
+
+
+
+
+
+
