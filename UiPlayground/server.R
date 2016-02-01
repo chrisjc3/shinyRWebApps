@@ -64,16 +64,36 @@ shinyServer(function(input, output, session) {
   
               #EXCEL :: TEST_SERIZLER SUBMIT
   defSerialCol<-function(xcol, fl){
+    #TAKE fl[,xcol] as unique list
+    fHld<-unique(fl[,xcol])
+    fHldLen<-length(fHld)
+    i<-1
+    hld<-cbind("NA","NA")
+    #CBIND an integer to count through uniques
+    while(i<=fHldLen){
+      hrow<-cbind(i, fHld[i])
+      hld<-rbind(hld, hrow)
+      i<-i+1
+    }
+    hld<-hld[1:fHldLen+1,]
+    #how to insert to right of fl[,xcol]
     
     
-    return(fl)
+    
+    return(hld)
   }
   
-  
+  #DEBUG OUTPUT
   observeEvent(input$submitXL2,{
-    out2$out<-defSerialCol(input$XLserializedIn_columns_selected, out1$out)
-    output$XLserializedOut<-DT::renderDataTable(out2$out)
+    out2$out<-defSerialCol(input$XLserializedIn_columns_selected, as.matrix(out1$out))
+    output$XLserializedOut<-renderTable({as.matrix(out2$out)})
   })
   
+  #DT OUTPUT
+#   observeEvent(input$submitXL2,{
+#     out2$out<-defSerialCol(input$XLserializedIn_columns_selected, out1$out)
+#     output$XLserializedOut<-DT::renderDataTable(out2$out)
+#   })
+#   
   #OBSERVATIONS END
 })
