@@ -24,5 +24,5 @@ shinyUI(fluidPage(
   ),
   mainPanel("Question Info",
             imageOutput("question"),
-            textOutput("test"))
+            tableOutput("test"))
 ))

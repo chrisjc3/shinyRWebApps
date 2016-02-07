@@ -7,7 +7,7 @@ library(shiny)
 
 shinyServer(function(input, output, session) {
   out1 <- reactiveValues()
-  
+  out2 <- reactiveValues()
   turnCtr <- function(x) {
     if (is.na(x)) {
       return(0)
@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
   }
   
   observeEvent(input$startTest,{
-    TurnMax <<- input$how_many_questions
+    TurnMax <<- as.numeric(input$how_many_questions)
     if (input$startTest == 1) {
       turn <<- 0
     }
@@ -36,7 +36,6 @@ shinyServer(function(input, output, session) {
       out1$ansRow <- subset(out1$ansData, out1$ansData[,1] == turn)
       out1$corAns <- out1$ansRow[,2]
       out1$aChoices <- out1$ansRow[1,3:6]
-      
       updateCheckboxGroupInput(
         session, "aOptions",
         choices = list(
@@ -50,13 +49,14 @@ shinyServer(function(input, output, session) {
     
   })
   
+
+  
   observeEvent(input$submitAnswer,{
-    # output$test<-renderText({out1$corAns})
-    ###################4:
-    #log feedback
-    
-    
-    
+    out2$newline<-c(turn, as.character(out1$corAns), input$aOptions)
+    out2$feedback<-rbind(out2$feedback, out2$newline)
+    output$test<-renderTable({
+      out2$feedback
+    })
     #PROCESS NEXT QUESTION:
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn != 0) {
@@ -96,6 +96,10 @@ shinyServer(function(input, output, session) {
       },deleteFile = FALSE)
       
     }
+
+    ###################4:
+    #log feedback
+    
   })
   
   
