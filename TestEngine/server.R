@@ -25,34 +25,42 @@ shinyServer(function(input, output, session) {
     TurnMax<-input$how_many_questions
     if(input$startTest == 1){turn <<- 0}
     turn <<- turnCtr(turn)
-    if(turn <= TurnMax) {
+    if(turn <= TurnMax & turn != 0) {
       out1$out<-list(
+        #If I was going to randomize the order it'd have to be up here
+          #little unecessary
         src = paste0("www/questions/que_", turn,".png"),
-        # src = "www/questions/que_1.png",
         width=500,
         height=250)
-      } 
+    }
+    output$question<-renderImage({
+      out1$out
+    },deleteFile=FALSE)
+    
+    ####################3:
+    #populate checkboxInput buttons 
+    #based on www/ANSWERS.xlsx
+    out1$ansData <- read.xlsx("www/ANSWERS.xlsx",1)
+    out1$ansRow<-subset(out1$ansData, out1$ansData[,1] == turn)
+    out1$corAns<-out1$ansRow[,2]
+    out1$aChoices <- out1$ansRow[1,3:6]
+    
+    # output$test <- renderTable({out1$aChoices})
+    updateCheckboxGroupInput(session, "aOptions",
+                             choices=list(as.character(out1$aChoices[,1]),
+                                          as.character(out1$aChoices[,2]),
+                                          as.character(out1$aChoices[,3]),
+                                          as.character(out1$aChoices[,4])
+                                          ))
   })
   
   observeEvent(input$submitAnswer,{
     
   })
-  #####################2:
-  #need reactive variable for question number
-    #steal turn counter from mastermind for question number counter
-  #need to insert counter into www/questions/que_'&counter'.png
   
-  ####################3:
-  #populate radio buttons 
-  #based on www/ANSWERS.xlsx
-  #when taking ANSWERS, shuffle them first..keeping QNO, but assigning a new sort
-  #find row based on &counter
+
   
-  
-  #EXAMPLE OF OUTPUT IMAGE
-  output$question<-renderImage({
-      out1$out
-  },deleteFile=FALSE)
+
   
   ###################4:
   #log feedback

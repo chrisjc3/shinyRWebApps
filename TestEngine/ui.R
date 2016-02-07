@@ -3,7 +3,7 @@ library(xlsx)
 library(shiny)
 library(XLConnect)
 library(shiny)
-
+library(DT)
 
 shinyUI(fluidPage(
   
@@ -21,7 +21,8 @@ shinyUI(fluidPage(
     
     ),
     mainPanel("Question Info",
-              imageOutput("question")
+              imageOutput("question"),
+              tableOutput("test")
     )    
   )
 
