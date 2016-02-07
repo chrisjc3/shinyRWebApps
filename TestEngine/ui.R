@@ -31,6 +31,7 @@ shinyUI(fluidPage(
   ),
   mainPanel("Question Info",
             imageOutput("question"),
-            tableOutput("feedback")
+            tableOutput("feedback"),
+            tableOutput("test")
             )
 ))

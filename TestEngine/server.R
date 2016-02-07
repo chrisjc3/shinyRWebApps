@@ -21,10 +21,7 @@ shinyServer(function(input, output, session) {
       return(x + 1)
     }
   }
-  #MAKE A SHUFFLE FUNCTION FOR ANSWERS.xlsx
-    #CREATE NEW_QNO AND LEAVE QNO ALONE TO CORRELATE TO IMAGE NAMING
-  
-  #PERHAPS A SECOND FUNTION SHOULD JUST RETURN the que_# TO REPLACE turn
+
   observeEvent(input$startTest,{
     TurnMax <<- as.numeric(input$how_many_questions)
     if (input$startTest == 1) {
@@ -32,19 +29,16 @@ shinyServer(function(input, output, session) {
     }
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn != 0) {
-      out1$out <- list(
-        src = paste0("www/questions/que_", turn,".png"),
-        width = 800,
-        height = 250
-      )
-      output$question <- renderImage({
-        out1$out
-      },deleteFile = FALSE)
+      tSample <<- read.xlsx("www/ANSWERS.xlsx",1)
+      tSample <<- tSample[1:TurnMax,]
+      out1$nOrd <-sample(seq_len(length(tSample[,1])),replace=FALSE)
+      tSample <<-cbind(out1$nOrd,tSample)
+      tSample<<-tSample[order(tSample[,1],tSample[,1]),]
       
-      out1$ansData <- read.xlsx("www/ANSWERS.xlsx",1)
-      out1$ansRow <- subset(out1$ansData, out1$ansData[,1] == turn)
-      out1$corAns <- out1$ansRow[,2]
-      out1$aChoices <- out1$ansRow[1,3:6]
+      out1$ansRow <- subset(tSample, tSample[,1] == turn)
+      out1$sQno <- out1$ansRow[,2] 
+      out1$corAns <- out1$ansRow[,3]
+      out1$aChoices <- out1$ansRow[1,4:7]
       updateCheckboxGroupInput(
         session, "aOptions",
         choices = list(
@@ -54,6 +48,15 @@ shinyServer(function(input, output, session) {
           as.character(out1$aChoices[,4])
         )
       )
+      out1$out <- list(
+        src = paste0("www/questions/que_", out1$sQno,".png"),
+        width = 800,
+        height = 250
+      )
+      output$question <- renderImage({
+        out1$out
+      },deleteFile = FALSE)
+      
     }
     
   })
@@ -69,23 +72,12 @@ shinyServer(function(input, output, session) {
       out2$feedback <- rbind(out2$feedback, out2$newline)
     }
     
-    #PROCESS NEXT QUESTION:
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn != 0) {
-      out1$out <- list(
-        src = paste0("www/questions/que_", turn,".png"),
-        width = 800,
-        height = 250
-      )
-      
-      output$question <- renderImage({
-        out1$out
-      },deleteFile = FALSE)
-      
-      out1$ansData <- read.xlsx("www/ANSWERS.xlsx",1)
-      out1$ansRow <- subset(out1$ansData, out1$ansData[,1] == turn)
-      out1$corAns <- out1$ansRow[,2]
-      out1$aChoices <- out1$ansRow[1,3:6]
+      out1$ansRow <- subset(tSample, tSample[,1] == turn)
+      out1$sQno <- out1$ansRow[,2] 
+      out1$corAns <- out1$ansRow[,3]
+      out1$aChoices <- out1$ansRow[1,4:7]
       updateCheckboxGroupInput(
         session, "aOptions",
         choices = list(
@@ -95,6 +87,17 @@ shinyServer(function(input, output, session) {
           as.character(out1$aChoices[,4])
         )
       )
+      
+      out1$out <- list(
+        src = paste0("www/questions/que_", out1$sQno,".png"),
+        width = 800,
+        height = 250
+      )
+      
+      output$question <- renderImage({
+        out1$out
+      },deleteFile = FALSE)
+      
       out2$corCt <-
         subset(out2$feedback , out2$feedback[,4] == "CORRECT")
       out2$badCt <-
