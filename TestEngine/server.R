@@ -12,7 +12,7 @@ shinyServer(function(input, output, session) {
   
   out1 <- reactiveValues()
   out2 <- reactiveValues()
-  shuffAnsDB <- reactiveValues()
+  out3 <- reactiveValues()
   
   turnCtr <- function(x) {
     if (is.na(x)) {
@@ -23,6 +23,7 @@ shinyServer(function(input, output, session) {
   }
 
   observeEvent(input$startTest,{
+    #MAKE THE START BUTTON INITIALIZE THE SUBMIT ANSWER BUTTON
     TurnMax <<- as.numeric(input$how_many_questions)
     if (input$startTest == 1) {
       turn <<- 0
@@ -64,15 +65,16 @@ shinyServer(function(input, output, session) {
   observeEvent(input$submitAnswer,{
     if (as.character(out1$corAns) == input$aOptions) {
       out2$newline <-
-        c(turn, as.character(out1$corAns), input$aOptions, "CORRECT")
+        c(out1$sQno, as.character(out1$corAns), input$aOptions, "CORRECT")
       out2$feedback <- rbind(out2$feedback, out2$newline)
     } else {
       out2$newline <-
-        c(turn, as.character(out1$corAns), input$aOptions, "WRONG")
+        c(out1$sQno, as.character(out1$corAns), input$aOptions, "WRONG")
       out2$feedback <- rbind(out2$feedback, out2$newline)
     }
     
     turn <<- turnCtr(turn)
+    
     if (turn <= TurnMax & turn != 0) {
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
       out1$sQno <- out1$ansRow[,2] 
@@ -133,22 +135,45 @@ shinyServer(function(input, output, session) {
         as.character(out2$fct)
       })
       
-      #IT COUNTS CORRECT AND INCORRECT AS IT GOES
-      #ONCE LAST QUESTION INPUT:
-        #Percentage correct in sidebarPanel
-      #in mainPanel
-        #render a "next" button to scroll through table of incorrect answers
-        #each slide should have
-        #Incorrect question qno, correct answer, answer input
-        #& imagine of explanation.png underneath
-      colnames(out2$feedback)<-c("QNO","CORRECT ANSWER","YOUR ANSWER","DEBUG")
-      
-      output$feedback<-renderTable({out2$feedback})
+      if (length(out2$badCt[,1]) > 0) {
+        colnames(out2$badCt)<-c("QUESTION REPO #","ANSWER","RESPONSE","STATUS") 
+        output$fResHd<-renderUI({
+          h3("Final Results:")
+        })
+        output$nextIFB <-renderUI({
+          actionButton("nextIFB", label = "Next Incorrect Feedback")
+        })
+        #DISPLAY THE FIRST ONE  
+        output$feedback<-renderTable({out2$badCt},include.rownames=FALSE)
+        out3$curobs <-
+          subset(out2$badCt, out2$badCt[,1] != 1)
+        output$currIC<-renderTable({
+          out3$curobs
+          },include.rownames=FALSE)
+      } else {
+        output$fResHd<-renderUI({
+          h3("NAILED IT!")
+        })
+      }
+
       
         
     }
-    
-    
+      #OBSERVE THE NEXT INCORRECTS
+    observeEvent(input$nextIFB,{
+      TurnMax <<- as.numeric(length(out2$badCt[,1]))
+      if (input$nextIFB == 1) {
+        turn <<- 1
+      }
+      turn <<- turnCtr(turn)
+      if (turn <= TurnMax & turn != 0) {
+        out3$curobs <-
+          subset(out2$badCt, out2$badCt[,1] != turn)
+        output$currIC<-renderTable({
+          out3$curobs
+          },include.rownames=FALSE)
+      }
+    })
     
   })
 })

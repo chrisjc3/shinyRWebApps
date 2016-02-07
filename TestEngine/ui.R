@@ -31,7 +31,10 @@ shinyUI(fluidPage(
   ),
   mainPanel("Question Info",
             imageOutput("question"),
+            uiOutput("fResHd"),
             tableOutput("feedback"),
-            tableOutput("test")
+            uiOutput("nextIFB"),
+            tableOutput("currIC"),
+            imageOutput("explanation")
             )
 ))
