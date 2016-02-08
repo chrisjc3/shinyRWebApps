@@ -14,7 +14,7 @@ shinyUI(fluidPage(
       #SO MAX IS MAX OF NON NA ANSWERS ON ANSWERS.XLSX
       sliderInput(
         "how_many_questions", "How many questions?",
-        min = 1, max = 29, value = 1, step = 1, round = 0
+        min = 1, max = 85, value = 1, step = 1, round = 0
       ),
       actionButton("startTest", "Start"),
       actionButton("refreshTest", "Refresh")
@@ -39,8 +39,10 @@ shinyUI(fluidPage(
             uiOutput("nextIFB"),
             
             br(),
-            imageOutput("fQuestion"),
             tableOutput("currIC"),
+            br(),
+            imageOutput("fQuestion"),
+            br(),
             imageOutput("explanation")
             )
 ))

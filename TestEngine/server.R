@@ -13,7 +13,9 @@ shinyServer(function(input, output, session) {
   out1 <- reactiveValues()
   out2 <- reactiveValues()
   out3 <- reactiveValues()
-  
+  GenRand<-function(x){
+    return(sample(1:x, 1))
+  }
   turnCtr <- function(x) {
     if (is.na(x)) {
       return(0)
@@ -23,7 +25,6 @@ shinyServer(function(input, output, session) {
   }
   
   observeEvent(input$startTest,{
-    #MAKE THE START BUTTON INITIALIZE THE SUBMIT ANSWER BUTTON
     TurnMax <<- as.numeric(input$how_many_questions)
     if (input$startTest == 1) {
       turn <<- 0
@@ -31,7 +32,11 @@ shinyServer(function(input, output, session) {
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn != 0) {
       tSample <<- read.xlsx("www/ANSWERS.xlsx",1)
-      tSample <<- tSample[1:TurnMax,]
+      st<-GenRand(length(tSample[,2]) - TurnMax) 
+      ed<-st+TurnMax
+      #This needs to subset a random amount of TurnMax length
+      tSample <<- tSample[st:ed,]
+      
       out1$nOrd <- sample(seq_len(length(tSample[,1])),replace = FALSE)
       tSample <<- cbind(out1$nOrd,tSample)
       tSample <<- tSample[order(tSample[,1],tSample[,1]),]
@@ -50,9 +55,9 @@ shinyServer(function(input, output, session) {
         )
       )
       out1$out <- list(
-        src = paste0("www/questions/que_", out1$sQno,".png"),
-        width = 800,
-        height = 300
+        src = paste0("www/questions/que_", out1$sQno,".png")
+        
+        
       )
       output$question <- renderImage({
         out1$out
@@ -91,9 +96,9 @@ shinyServer(function(input, output, session) {
       )
       
       out1$out <- list(
-        src = paste0("www/questions/que_", out1$sQno,".png"),
-        width = 800,
-        height = 300
+        src = paste0("www/questions/que_", out1$sQno,".png")
+        
+        
       )
       
       output$question <- renderImage({
@@ -113,9 +118,8 @@ shinyServer(function(input, output, session) {
     } else if (turn > TurnMax) {
       updateCheckboxGroupInput(session, "aOptions", choices = character(0))
       out1$out <- list(
-        src = paste0("www/questions/finished.png"),
-        width = 250,
-        height = 300
+        src = paste0("www/questions/finished.png")
+        
       )
       output$question <- renderImage({
         out1$out
@@ -145,7 +149,7 @@ shinyServer(function(input, output, session) {
         output$nextIFB <- renderUI({
           actionButton("nextIFB", label = "Next Incorrect Feedback")
         })
-        #DISPLAY THE FIRST ONE
+
         output$feedback <-
           renderTable({
             out2$badCt
@@ -159,18 +163,18 @@ shinyServer(function(input, output, session) {
         out3$curobs <- out2$badCt[1,1]
         
         out3$img1 <- list(
-          src = paste0("www/explanations/exp_", out3$curobs,".png"),
-          width = 800,
-          height = 300
+          src = paste0("www/explanations/exp_", out3$curobs,".png")
+          
+          
         )
         output$explanation <- renderImage({
           out3$img1 
         },deleteFile = FALSE)
         
         out3$img2 <- list(
-          src = paste0("www/questions/que_", out3$curobs,".png"),
-          width = 800,
-          height = 300
+          src = paste0("www/questions/que_", out3$curobs,".png")
+          
+          
         )
         output$fQuestion <- renderImage({
           out3$img2 
@@ -202,18 +206,18 @@ shinyServer(function(input, output, session) {
         out3$curobs <- out2$badCt[turn,1]
       
         out3$img1 <- list(
-          src = paste0("www/explanations/exp_", out3$curobs,".png"),
-          width = 800,
-          height = 300
+          src = paste0("www/explanations/exp_", out3$curobs,".png")
+          
+  
         )
         output$explanation <- renderImage({
           out3$img1 
         },deleteFile = FALSE)
         
         out3$img2 <- list(
-          src = paste0("www/questions/que_", out3$curobs,".png"),
-          width = 800,
-          height = 300
+          src = paste0("www/questions/que_", out3$curobs,".png")
+          
+          
         )
         output$fQuestion <- renderImage({
           out3$img2 
