@@ -9,9 +9,12 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       "Test Options",
+      
+      #TURN THIS INTO A RENDER UI FROM SERVER...
+      #SO MAX IS MAX OF NON NA ANSWERS ON ANSWERS.XLSX
       sliderInput(
         "how_many_questions", "How many questions?",
-        min = 5, max = 120, value = 5, step = 1, round = 0
+        min = 1, max = 29, value = 1, step = 1, round = 0
       ),
       actionButton("startTest", "Start"),
       actionButton("refreshTest", "Refresh")
@@ -34,8 +37,9 @@ shinyUI(fluidPage(
             uiOutput("fResHd"),
             tableOutput("feedback"),
             uiOutput("nextIFB"),
-            br(),
             
+            br(),
+            imageOutput("fQuestion"),
             tableOutput("currIC"),
             imageOutput("explanation")
             )

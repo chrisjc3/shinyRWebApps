@@ -52,7 +52,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/que_", out1$sQno,".png"),
         width = 800,
-        height = 150
+        height = 300
       )
       output$question <- renderImage({
         out1$out
@@ -93,7 +93,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/que_", out1$sQno,".png"),
         width = 800,
-        height = 150
+        height = 300
       )
       
       output$question <- renderImage({
@@ -115,7 +115,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/finished.png"),
         width = 250,
-        height = 150
+        height = 300
       )
       output$question <- renderImage({
         out1$out
@@ -158,13 +158,22 @@ shinyServer(function(input, output, session) {
         
         out3$curobs <- out2$badCt[1,1]
         
-        out3$img <- list(
+        out3$img1 <- list(
           src = paste0("www/explanations/exp_", out3$curobs,".png"),
           width = 800,
-          height = 150
+          height = 300
         )
         output$explanation <- renderImage({
-          out3$img 
+          out3$img1 
+        },deleteFile = FALSE)
+        
+        out3$img2 <- list(
+          src = paste0("www/questions/que_", out3$curobs,".png"),
+          width = 800,
+          height = 300
+        )
+        output$fQuestion <- renderImage({
+          out3$img2 
         },deleteFile = FALSE)
         
       } else {
@@ -191,15 +200,25 @@ shinyServer(function(input, output, session) {
         },include.colnames = FALSE)
         
         out3$curobs <- out2$badCt[turn,1]
-        
-        out3$img <- list(
+      
+        out3$img1 <- list(
           src = paste0("www/explanations/exp_", out3$curobs,".png"),
           width = 800,
-          height = 150
+          height = 300
         )
         output$explanation <- renderImage({
-          out3$img 
+          out3$img1 
         },deleteFile = FALSE)
+        
+        out3$img2 <- list(
+          src = paste0("www/questions/que_", out3$curobs,".png"),
+          width = 800,
+          height = 300
+        )
+        output$fQuestion <- renderImage({
+          out3$img2 
+        },deleteFile = FALSE)
+        
       #RENDERING A PREVIOUS BUTTON WOULD BE GOOD
       }
     })
