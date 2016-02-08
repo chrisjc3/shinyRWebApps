@@ -34,7 +34,6 @@ shinyServer(function(input, output, session) {
       tSample <<- read.xlsx("www/ANSWERS.xlsx",1)
       st<-GenRand(length(tSample[,2]) - TurnMax) 
       ed<-st+TurnMax
-      #This needs to subset a random amount of TurnMax length
       tSample <<- tSample[st:ed,]
       
       out1$nOrd <- sample(seq_len(length(tSample[,1])),replace = FALSE)
