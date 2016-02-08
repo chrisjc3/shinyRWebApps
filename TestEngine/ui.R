@@ -34,6 +34,8 @@ shinyUI(fluidPage(
             uiOutput("fResHd"),
             tableOutput("feedback"),
             uiOutput("nextIFB"),
+            br(),
+            
             tableOutput("currIC"),
             imageOutput("explanation")
             )

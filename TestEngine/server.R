@@ -21,7 +21,7 @@ shinyServer(function(input, output, session) {
       return(x + 1)
     }
   }
-
+  
   observeEvent(input$startTest,{
     #MAKE THE START BUTTON INITIALIZE THE SUBMIT ANSWER BUTTON
     TurnMax <<- as.numeric(input$how_many_questions)
@@ -32,12 +32,12 @@ shinyServer(function(input, output, session) {
     if (turn <= TurnMax & turn != 0) {
       tSample <<- read.xlsx("www/ANSWERS.xlsx",1)
       tSample <<- tSample[1:TurnMax,]
-      out1$nOrd <-sample(seq_len(length(tSample[,1])),replace=FALSE)
-      tSample <<-cbind(out1$nOrd,tSample)
-      tSample<<-tSample[order(tSample[,1],tSample[,1]),]
+      out1$nOrd <- sample(seq_len(length(tSample[,1])),replace = FALSE)
+      tSample <<- cbind(out1$nOrd,tSample)
+      tSample <<- tSample[order(tSample[,1],tSample[,1]),]
       
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
-      out1$sQno <- out1$ansRow[,2] 
+      out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
       out1$aChoices <- out1$ansRow[1,4:7]
       updateCheckboxGroupInput(
@@ -52,7 +52,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/que_", out1$sQno,".png"),
         width = 800,
-        height = 250
+        height = 150
       )
       output$question <- renderImage({
         out1$out
@@ -77,7 +77,7 @@ shinyServer(function(input, output, session) {
     
     if (turn <= TurnMax & turn != 0) {
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
-      out1$sQno <- out1$ansRow[,2] 
+      out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
       out1$aChoices <- out1$ansRow[1,4:7]
       updateCheckboxGroupInput(
@@ -93,7 +93,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/que_", out1$sQno,".png"),
         width = 800,
-        height = 250
+        height = 150
       )
       
       output$question <- renderImage({
@@ -115,7 +115,7 @@ shinyServer(function(input, output, session) {
       out1$out <- list(
         src = paste0("www/questions/finished.png"),
         width = 250,
-        height = 250
+        height = 150
       )
       output$question <- renderImage({
         out1$out
@@ -130,36 +130,53 @@ shinyServer(function(input, output, session) {
       output$Incorrects <- renderText({
         paste(length(out2$badCt[,1]), "/", TurnMax, sep = "")
       })
-      out2$fct<-as.numeric(length(out2$corCt[,1]))/as.numeric(TurnMax)
+      out2$fct <-
+        as.numeric(length(out2$corCt[,1])) / as.numeric(TurnMax)
       output$corPerct <- renderText({
         as.character(out2$fct)
       })
       
       if (length(out2$badCt[,1]) > 0) {
-        colnames(out2$badCt)<-c("QUESTION REPO #","ANSWER","RESPONSE","STATUS") 
-        output$fResHd<-renderUI({
+        colnames(out2$badCt) <-
+          c("QUESTION REPO #","ANSWER","RESPONSE","STATUS")
+        output$fResHd <- renderUI({
           h3("Final Results:")
         })
-        output$nextIFB <-renderUI({
+        output$nextIFB <- renderUI({
           actionButton("nextIFB", label = "Next Incorrect Feedback")
         })
-        #DISPLAY THE FIRST ONE  
-        output$feedback<-renderTable({out2$badCt},include.rownames=FALSE)
-        out3$curobs <-
-          subset(out2$badCt, out2$badCt[,1] != 1)
-        output$currIC<-renderTable({
-          out3$curobs
-          },include.rownames=FALSE)
+        #DISPLAY THE FIRST ONE
+        output$feedback <-
+          renderTable({
+            out2$badCt
+          },include.rownames = FALSE)
+        
+        out3$currow <- as.matrix(out2$badCt[1,1:3])
+        output$currIC <- renderTable({
+          out3$currow
+        },include.colnames = FALSE)
+        
+        out3$curobs <- out2$badCt[1,1]
+        
+        out3$img <- list(
+          src = paste0("www/explanations/exp_", out3$curobs,".png"),
+          width = 800,
+          height = 150
+        )
+        output$explanation <- renderImage({
+          out3$img 
+        },deleteFile = FALSE)
+        
       } else {
-        output$fResHd<-renderUI({
+        output$fResHd <- renderUI({
           h3("NAILED IT!")
         })
       }
-
       
-        
+      
+      
     }
-      #OBSERVE THE NEXT INCORRECTS
+
     observeEvent(input$nextIFB,{
       TurnMax <<- as.numeric(length(out2$badCt[,1]))
       if (input$nextIFB == 1) {
@@ -167,11 +184,23 @@ shinyServer(function(input, output, session) {
       }
       turn <<- turnCtr(turn)
       if (turn <= TurnMax & turn != 0) {
-        out3$curobs <-
-          subset(out2$badCt, out2$badCt[,1] != turn)
-        output$currIC<-renderTable({
-          out3$curobs
-          },include.rownames=FALSE)
+        
+        out3$currow <- as.matrix(out2$badCt[turn,1:3])
+        output$currIC <- renderTable({
+          out3$currow
+        },include.colnames = FALSE)
+        
+        out3$curobs <- out2$badCt[turn,1]
+        
+        out3$img <- list(
+          src = paste0("www/explanations/exp_", out3$curobs,".png"),
+          width = 800,
+          height = 150
+        )
+        output$explanation <- renderImage({
+          out3$img 
+        },deleteFile = FALSE)
+      #RENDERING A PREVIOUS BUTTON WOULD BE GOOD
       }
     })
     
