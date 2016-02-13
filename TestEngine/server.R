@@ -23,7 +23,9 @@ shinyServer(function(input, output, session) {
       return(x + 1)
     }
   }
+
   
+  ##################TEST START OBSERVATION#################
   observeEvent(input$startTest,{
     TurnMax <<- as.numeric(input$how_many_questions)
     if (input$startTest == 1) {
@@ -31,7 +33,9 @@ shinyServer(function(input, output, session) {
     }
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn != 0) {
-      tSample <<- read.xlsx("www/ANSWERS.xlsx",1)
+      tSample <<- read.xlsx("www/testmats/ANSWERS.xlsx",1)
+      tSample <<-subset(tSample, tSample[,1] != "NA")
+      #R was reading deleted XLSX cells in as NA instead of not existing
       st<-GenRand(length(tSample[,2]) - TurnMax) 
       ed<-st+TurnMax
       tSample <<- tSample[st:ed,]
@@ -43,20 +47,18 @@ shinyServer(function(input, output, session) {
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
       out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
-      out1$aChoices <- out1$ansRow[1,4:7]
-      updateCheckboxGroupInput(
-        session, "aOptions",
-        choices = list(
-          as.character(out1$aChoices[,1]),
-          as.character(out1$aChoices[,2]),
-          as.character(out1$aChoices[,3]),
-          as.character(out1$aChoices[,4])
-        )
-      )
+      
+      output$aOptions<-renderUI({
+        radioButtons("aOptions", "Options", c("a","b","c","d"))
+      })
+      output$subButton<-renderUI({
+        actionButton("submitAnswer","Submit")
+      }) 
+      
       out1$out <- list(
-        src = paste0("www/questions/que_", out1$sQno,".png")
-        
-        
+        src = paste0("www/testmats/q", out1$sQno,".png"),
+        width = 800,
+        height = 800
       )
       output$question <- renderImage({
         out1$out
@@ -65,7 +67,9 @@ shinyServer(function(input, output, session) {
     }
     
   })
+
   
+  ##################ANSWER SUBMISSION OBSERVATION#################
   observeEvent(input$submitAnswer,{
     if (as.character(out1$corAns) == input$aOptions) {
       out2$newline <-
@@ -83,20 +87,11 @@ shinyServer(function(input, output, session) {
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
       out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
-      out1$aChoices <- out1$ansRow[1,4:7]
-      updateCheckboxGroupInput(
-        session, "aOptions",
-        choices = list(
-          as.character(out1$aChoices[,1]),
-          as.character(out1$aChoices[,2]),
-          as.character(out1$aChoices[,3]),
-          as.character(out1$aChoices[,4])
-        )
-      )
       
       out1$out <- list(
-        src = paste0("www/questions/que_", out1$sQno,".png")
-        
+        src = paste0("www/testmats/q", out1$sQno,".png"),
+        width = 800,
+        height = 800
         
       )
       
@@ -115,9 +110,10 @@ shinyServer(function(input, output, session) {
         paste(length(out2$badCt[,1]), "/", TurnMax, sep = "")
       })
     } else if (turn > TurnMax) {
-      updateCheckboxGroupInput(session, "aOptions", choices = character(0))
+      output$aOptions<-renderUI({})
+      output$subButton<-renderUI({}) 
       out1$out <- list(
-        src = paste0("www/questions/finished.png")
+        src = paste0("www/testmats/finished.png")
         
       )
       output$question <- renderImage({
@@ -162,8 +158,9 @@ shinyServer(function(input, output, session) {
         out3$curobs <- out2$badCt[1,1]
         
         out3$img1 <- list(
-          src = paste0("www/explanations/exp_", out3$curobs,".png")
-          
+          src = paste0("www/testmats/a", out3$curobs,".png"),
+          width = 800,
+          height = 800
           
         )
         output$explanation <- renderImage({
@@ -171,7 +168,9 @@ shinyServer(function(input, output, session) {
         },deleteFile = FALSE)
         
         out3$img2 <- list(
-          src = paste0("www/questions/que_", out3$curobs,".png")
+          src = paste0("www/testmats/q", out3$curobs,".png"),
+          width = 800,
+          height = 800
           
           
         )
@@ -185,10 +184,11 @@ shinyServer(function(input, output, session) {
         })
       }
       
-      
-      
     }
 
+    
+    
+ ##################FEEDBACK OBSERVATION#################
     observeEvent(input$nextIFB,{
       TurnMax <<- as.numeric(length(out2$badCt[,1]))
       if (input$nextIFB == 1) {
@@ -202,11 +202,15 @@ shinyServer(function(input, output, session) {
           out3$currow
         },include.colnames = FALSE)
         
+        
+        
+        #MAKE "FULL QUESTION" (fq) IMAGES INSTEAD OF TRYING TO STACK THESE
         out3$curobs <- out2$badCt[turn,1]
       
         out3$img1 <- list(
-          src = paste0("www/explanations/exp_", out3$curobs,".png")
-          
+          src = paste0("www/testmats/a", out3$curobs,".png"),
+          width = 800,
+          height = 800
   
         )
         output$explanation <- renderImage({
@@ -214,7 +218,9 @@ shinyServer(function(input, output, session) {
         },deleteFile = FALSE)
         
         out3$img2 <- list(
-          src = paste0("www/questions/que_", out3$curobs,".png")
+          src = paste0("www/testmats/q", out3$curobs,".png"),
+          width = 800,
+          height = 800
           
           
         )
