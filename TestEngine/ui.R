@@ -6,9 +6,6 @@ library(shiny)
 library(DT)
 
 shinyUI(fluidPage(
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
-  ),
   sidebarLayout(
     sidebarPanel(
       "Test Options",
@@ -26,8 +23,6 @@ shinyUI(fluidPage(
       "Answer Options",
       uiOutput("aOptions"),
       uiOutput("subButton"),
-      # actionButton("submitAnswer","Submit"),
-      
       h6("Correct Counter:"),
       textOutput("Corrects"),
       h6("Incorrect Counter:"),
@@ -41,14 +36,15 @@ shinyUI(fluidPage(
             imageOutput("question"),
             uiOutput("fResHd"),
             tableOutput("feedback"),
+            #ADD A UIOUTPUT FOR PREVIOUS BUTTON
             uiOutput("nextIFB"),
+            
             
             br(),
             tableOutput("currIC"),
             br(),
-            imageOutput("fQuestion"),
-            br(),
-            imageOutput("explanation")
+            imageOutput("fQuestion")
+
             )
 
 ))

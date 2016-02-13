@@ -56,9 +56,7 @@ shinyServer(function(input, output, session) {
       }) 
       
       out1$out <- list(
-        src = paste0("www/testmats/q", out1$sQno,".png"),
-        width = 800,
-        height = 800
+        src = paste0("www/testmats/q", out1$sQno,".png")
       )
       output$question <- renderImage({
         out1$out
@@ -89,10 +87,7 @@ shinyServer(function(input, output, session) {
       out1$corAns <- out1$ansRow[,3]
       
       out1$out <- list(
-        src = paste0("www/testmats/q", out1$sQno,".png"),
-        width = 800,
-        height = 800
-        
+        src = paste0("www/testmats/q", out1$sQno,".png")
       )
       
       output$question <- renderImage({
@@ -141,6 +136,8 @@ shinyServer(function(input, output, session) {
         output$fResHd <- renderUI({
           h3("Final Results:")
         })
+        
+        ####RENDER ANOTHER BUTTON FOR PREVIOUS
         output$nextIFB <- renderUI({
           actionButton("nextIFB", label = "Next Incorrect Feedback")
         })
@@ -157,21 +154,8 @@ shinyServer(function(input, output, session) {
         
         out3$curobs <- out2$badCt[1,1]
         
-        out3$img1 <- list(
-          src = paste0("www/testmats/a", out3$curobs,".png"),
-          width = 800,
-          height = 800
-          
-        )
-        output$explanation <- renderImage({
-          out3$img1 
-        },deleteFile = FALSE)
-        
         out3$img2 <- list(
-          src = paste0("www/testmats/q", out3$curobs,".png"),
-          width = 800,
-          height = 800
-          
+          src = paste0("www/testmats/fq", out3$curobs,".png")
           
         )
         output$fQuestion <- renderImage({
@@ -188,7 +172,7 @@ shinyServer(function(input, output, session) {
 
     
     
- ##################FEEDBACK OBSERVATION#################
+ ##################FEEDBACK OBSERVATIONS#################
     observeEvent(input$nextIFB,{
       TurnMax <<- as.numeric(length(out2$badCt[,1]))
       if (input$nextIFB == 1) {
@@ -201,36 +185,19 @@ shinyServer(function(input, output, session) {
         output$currIC <- renderTable({
           out3$currow
         },include.colnames = FALSE)
-        
-        
-        
-        #MAKE "FULL QUESTION" (fq) IMAGES INSTEAD OF TRYING TO STACK THESE
+
         out3$curobs <- out2$badCt[turn,1]
-      
-        out3$img1 <- list(
-          src = paste0("www/testmats/a", out3$curobs,".png"),
-          width = 800,
-          height = 800
-  
-        )
-        output$explanation <- renderImage({
-          out3$img1 
-        },deleteFile = FALSE)
         
         out3$img2 <- list(
-          src = paste0("www/testmats/q", out3$curobs,".png"),
-          width = 800,
-          height = 800
-          
+          src = paste0("www/testmats/fq", out3$curobs,".png")
           
         )
         output$fQuestion <- renderImage({
           out3$img2 
         },deleteFile = FALSE)
-        
-      #RENDERING A PREVIOUS BUTTON WOULD BE GOOD
       }
     })
+    #ADD AN OBSERVATION FOR A PREVIOUS BUTTON RENDERED ABOVE
     
   })
 })
