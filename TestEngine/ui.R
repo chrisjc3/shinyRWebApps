@@ -10,13 +10,20 @@ shinyUI(fluidPage(
     sidebarPanel(
       "Test Options",
       
-      #SHOULD PROBABLY BE REACTIVE ON HOW MANY ARE READ FROM ANSWERS.XLSX
+      #MAKE ALL BELOW:
+      #RenderUI's off a start button 
+      #SLIDER SHOULD PROBABLY BE REACTIVE ON HOW MANY ARE READ FROM ANSWERS.XLSX
+      #UNRENDER IT WHEN TEST COMPLETES AND RERENDER THE BUTTON 
+        #OR CAN THESE RENDER ON LOAD OF PAGE? (FOR EASY UNRENDERING)
       sliderInput(
         "how_many_questions", "How many questions?",
-        min = 1, max = 10, value = 1, step = 1, round = 0
+        min = 1, max = 208, value = 1, step = 1, round = 0
       ),
       actionButton("startTest", "Start"),
       actionButton("refreshTest", "Refresh")
+      #TO HERE:#
+      
+      
     ),
     sidebarPanel(
       "Answer Options",
