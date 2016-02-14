@@ -13,7 +13,7 @@ shinyServer(function(input, output, session) {
   out1 <- reactiveValues()
   out2 <- reactiveValues()
   out3 <- reactiveValues()
-  GenRand<-function(x){
+  GenRand <- function(x) {
     return(sample(1:x, 1))
   }
   turnCtr <- function(x) {
@@ -23,7 +23,6 @@ shinyServer(function(input, output, session) {
       return(x + 1)
     }
   }
-
   
   ##################TEST START OBSERVATION#################
   observeEvent(input$startTest,{
@@ -32,32 +31,38 @@ shinyServer(function(input, output, session) {
       turn <<- 0
     }
     turn <<- turnCtr(turn)
-    if (turn <= TurnMax & turn != 0) {
+    if (turn <= TurnMax & turn > 0) {
       tSample <<- read.xlsx("www/testmats/ANSWERS.xlsx",1)
-      tSample <<-subset(tSample, tSample[,1] != "NA")
-      #R was reading deleted XLSX cells in as NA instead of not existing
-      st<-GenRand(length(tSample[,2]) - TurnMax) 
-      ed<-st+TurnMax
-      tSample <<- tSample[st:ed,]
+      tSample <<- subset(tSample, tSample[,1] != "NA")
+      ansMax <<- length(tSample[,1])
+      st <- GenRand(length(tSample[,2]))
+      if(st+TurnMax > ansMax+1){
+        hld1<-tSample[st:ansMax,]
+        f<-TurnMax-as.numeric(length(hld1[,1]))
+        hld2<-tSample[((st+1)-f):st-1,]
+        tSample<<-rbind(hld1,hld2)
+      } else {
+        tSample<<-tSample[st:(st+(TurnMax-1)),]
+      }
       
-      out1$nOrd <- sample(seq_len(length(tSample[,1])),replace = FALSE)
+      out1$nOrd <-
+        sample(seq_len(length(tSample[,1])),replace = FALSE)
       tSample <<- cbind(out1$nOrd,tSample)
       tSample <<- tSample[order(tSample[,1],tSample[,1]),]
+      tSample <<- subset(tSample, tSample[,2] != "NA")
       
       out1$ansRow <- subset(tSample, tSample[,1] == turn)
       out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
       
-      output$aOptions<-renderUI({
+      output$aOptions <- renderUI({
         radioButtons("aOptions", "Options", c("a","b","c","d"))
       })
-      output$subButton<-renderUI({
+      output$subButton <- renderUI({
         actionButton("submitAnswer","Submit")
-      }) 
+      })
       
-      out1$out <- list(
-        src = paste0("www/testmats/q", out1$sQno,".png")
-      )
+      out1$out <- list(src = paste0("www/testmats/q", out1$sQno,".png"))
       output$question <- renderImage({
         out1$out
       },deleteFile = FALSE)
@@ -65,7 +70,7 @@ shinyServer(function(input, output, session) {
     }
     
   })
-
+  
   
   ##################ANSWER SUBMISSION OBSERVATION#################
   observeEvent(input$submitAnswer,{
@@ -86,9 +91,7 @@ shinyServer(function(input, output, session) {
       out1$sQno <- out1$ansRow[,2]
       out1$corAns <- out1$ansRow[,3]
       
-      out1$out <- list(
-        src = paste0("www/testmats/q", out1$sQno,".png")
-      )
+      out1$out <- list(src = paste0("www/testmats/q", out1$sQno,".png"))
       
       output$question <- renderImage({
         out1$out
@@ -105,12 +108,11 @@ shinyServer(function(input, output, session) {
         paste(length(out2$badCt[,1]), "/", TurnMax, sep = "")
       })
     } else if (turn > TurnMax) {
-      output$aOptions<-renderUI({})
-      output$subButton<-renderUI({}) 
-      out1$out <- list(
-        src = paste0("www/testmats/finished.png")
-        
-      )
+      output$aOptions <- renderUI({
+      })
+      output$subButton <- renderUI({
+      })
+      out1$out <- list(src = paste0("www/testmats/finished.png"))
       output$question <- renderImage({
         out1$out
       },deleteFile = FALSE)
@@ -137,11 +139,11 @@ shinyServer(function(input, output, session) {
           h3("Final Results:")
         })
         
-        ####RENDER ANOTHER BUTTON FOR PREVIOUS
+        
         output$nextIFB <- renderUI({
           actionButton("nextIFB", label = "Next Incorrect Feedback")
         })
-
+        
         output$feedback <-
           renderTable({
             out2$badCt
@@ -154,12 +156,9 @@ shinyServer(function(input, output, session) {
         
         out3$curobs <- out2$badCt[1,1]
         
-        out3$img2 <- list(
-          src = paste0("www/testmats/fq", out3$curobs,".png")
-          
-        )
+        out3$img2 <- list(src = paste0("www/testmats/fq", out3$curobs,".png"))
         output$fQuestion <- renderImage({
-          out3$img2 
+          out3$img2
         },deleteFile = FALSE)
         
       } else {
@@ -167,37 +166,59 @@ shinyServer(function(input, output, session) {
           h3("NAILED IT!")
         })
       }
+      turn <<- 1
       
     }
-
+    })
     
-    
- ##################FEEDBACK OBSERVATIONS#################
+    ##################FEEDBACK OBSERVATIONS#################
+    ########NEXT######
     observeEvent(input$nextIFB,{
+      output$prevIFB <- renderUI({
+        actionButton("prevIFB", label = "Previous Incorrect Feedback")
+      })
+      
       TurnMax <<- as.numeric(length(out2$badCt[,1]))
-      if (input$nextIFB == 1) {
-        turn <<- 1
-      }
       turn <<- turnCtr(turn)
-      if (turn <= TurnMax & turn != 0) {
-        
+      if (turn <= TurnMax & turn > 0) {
         out3$currow <- as.matrix(out2$badCt[turn,1:3])
         output$currIC <- renderTable({
           out3$currow
         },include.colnames = FALSE)
-
+        
         out3$curobs <- out2$badCt[turn,1]
         
-        out3$img2 <- list(
-          src = paste0("www/testmats/fq", out3$curobs,".png")
-          
-        )
+        out3$img2 <- list(src = paste0("www/testmats/fq", out3$curobs,".png"))
         output$fQuestion <- renderImage({
-          out3$img2 
+          out3$img2
         },deleteFile = FALSE)
       }
     })
-    #ADD AN OBSERVATION FOR A PREVIOUS BUTTON RENDERED ABOVE
+    ########PREVIOUS######
+    observeEvent(input$prevIFB,{
+      if (turn > 1) { 
+      turn <<- turn - 1
+      } 
+      if (turn <= TurnMax & turn > 0) {
+        out3$currow <- as.matrix(out2$badCt[turn,1:3])
+        output$currIC <- renderTable({
+          out3$currow
+        },include.colnames = FALSE)
+        
+        out3$curobs <- out2$badCt[turn,1]
+        
+        out3$img2 <- list(src = paste0("www/testmats/fq", out3$curobs,".png"))
+        output$fQuestion <- renderImage({
+          out3$img2
+        },deleteFile = FALSE)
+      }
+      if(turn == 1){
+        output$prevIFB <- renderUI({
+          
+        })
+      }
+    })
     
-  })
+    
+
 })

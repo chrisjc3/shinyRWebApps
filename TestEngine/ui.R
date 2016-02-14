@@ -10,8 +10,7 @@ shinyUI(fluidPage(
     sidebarPanel(
       "Test Options",
       
-      #TURN THIS INTO A RENDER UI FROM SERVER...
-      #SO MAX IS MAX OF NON NA ANSWERS ON ANSWERS.XLSX
+      #SHOULD PROBABLY BE REACTIVE ON HOW MANY ARE READ FROM ANSWERS.XLSX
       sliderInput(
         "how_many_questions", "How many questions?",
         min = 1, max = 10, value = 1, step = 1, round = 0
@@ -32,19 +31,20 @@ shinyUI(fluidPage(
     )
     
   ),
-  mainPanel("Question Info",
-            imageOutput("question"),
-            uiOutput("fResHd"),
-            tableOutput("feedback"),
-            #ADD A UIOUTPUT FOR PREVIOUS BUTTON
-            uiOutput("nextIFB"),
-            
-            
-            br(),
-            tableOutput("currIC"),
-            br(),
-            imageOutput("fQuestion")
-
-            )
-
+  mainPanel(
+    "Question Info",
+    imageOutput("question"),
+    uiOutput("fResHd"),
+    tableOutput("feedback"),
+    
+    uiOutput("prevIFB"),
+    uiOutput("nextIFB"),
+    
+    br(),
+    tableOutput("currIC"),
+    br(),
+    imageOutput("fQuestion")
+    
+  )
+  
 ))
