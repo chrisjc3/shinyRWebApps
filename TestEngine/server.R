@@ -46,6 +46,7 @@ shinyServer(function(input, output, session) {
           hld<-subset(tSample, tSample[,1] == as.character(obs))
         } else {
           if(obs %in% obslst){
+            xlen<-xlen-1
           } else {
             hld<-rbind(hld, subset(tSample, tSample[,1] == as.character(obs)))
           }

@@ -35,6 +35,7 @@ shinyUI(fluidPage(
       textOutput("Incorrects"),
       h6("Final Score:"),
       textOutput("corPerct")
+      #could add a timer...
     )
     
   ),
