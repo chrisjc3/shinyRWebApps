@@ -32,18 +32,29 @@ shinyServer(function(input, output, session) {
     }
     turn <<- turnCtr(turn)
     if (turn <= TurnMax & turn > 0) {
+
       tSample <<- read.xlsx("www/testmats/ANSWERS.xlsx",1)
       tSample <<- subset(tSample, tSample[,1] != "NA")
       ansMax <<- length(tSample[,1])
-      st <- GenRand(length(tSample[,2]))
-      if(st+TurnMax > ansMax+1){
-        hld1<-tSample[st:ansMax,]
-        f<-TurnMax-as.numeric(length(hld1[,1]))
-        hld2<-tSample[((st+1)-f):st-1,]
-        tSample<<-rbind(hld1,hld2)
-      } else {
-        tSample<<-tSample[st:(st+(TurnMax-1)),]
+      
+      hld<-NA
+      obslst<-NA
+      xlen<-0
+      while(xlen < TurnMax){
+        obs<- GenRand(length(tSample[,2]))
+        suppressWarnings(if(is.na(hld)){
+          hld<-subset(tSample, tSample[,1] == as.character(obs))
+        } else {
+          if(obs %in% obslst){
+          } else {
+            hld<-rbind(hld, subset(tSample, tSample[,1] == as.character(obs)))
+          }
+        }
+        )
+        xlen<-xlen+1
+        obslst<-c(obslst, obs)
       }
+      tSample<<-hld
       
       out1$nOrd <-
         sample(seq_len(length(tSample[,1])),replace = FALSE)
